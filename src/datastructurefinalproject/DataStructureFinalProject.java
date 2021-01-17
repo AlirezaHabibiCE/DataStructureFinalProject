@@ -9,11 +9,9 @@ package datastructurefinalproject;
  *
  * @author mohammadi
  */
-public class DataStructureFinalProject {
+public class DataStructureFinalProject 
+{
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         // TODO code application logic here
     }
