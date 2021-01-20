@@ -5,6 +5,11 @@
  */
 package datastructurefinalproject;
 
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author mohammadi
@@ -16,6 +21,7 @@ public class Home extends javax.swing.JFrame {
      */
     public Home() {
         initComponents();
+        new Tools().setCenter(this);
     }
 
     /**
@@ -27,21 +33,73 @@ public class Home extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnChoseFile = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        btnChoseFile.setText("Choose File");
+        btnChoseFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChoseFileActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 551, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addComponent(btnChoseFile)
+                .addContainerGap(406, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 435, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(93, 93, 93)
+                .addComponent(btnChoseFile)
+                .addContainerGap(314, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    File selectedFile = null;
+    private void btnChoseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChoseFileActionPerformed
+        JFileChooser file = new JFileChooser();
+        
+                    
+            //----------------------------- Extension Filter -----------------------------------------------------------------------------------------------------------------
+            
+            FileNameExtensionFilter txt = new FileNameExtensionFilter("TEXT(*.txt)","txt");
+            FileNameExtensionFilter cmp = new FileNameExtensionFilter("cmp(*.cmp)", "cmp");
+                        
+            file.setFileFilter(txt);
+            file.setFileFilter(cmp);
+            
+
+            
+            //------------------------- Set Default Directory --------------------------------------------------------------------------------------------------------------------------------------------
+            File defaultDirectory  = new File(System.getProperty("user.home")+System.getProperty("file.separator")+"Desktop");
+            file.setCurrentDirectory(defaultDirectory);
+            
+            file.showOpenDialog(this);
+            selectedFile = file.getSelectedFile();
+            
+            String selectedFilePath = selectedFile.getPath();
+            String extention = selectedFilePath.substring(selectedFilePath.lastIndexOf("."),selectedFilePath.length());
+            
+            
+            if(extention.equals(".txt"))
+            {
+                
+            }
+            
+            JOptionPane.showMessageDialog(null, extention);
+            
+            
+            
+            
+    }//GEN-LAST:event_btnChoseFileActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,5 +137,6 @@ public class Home extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnChoseFile;
     // End of variables declaration//GEN-END:variables
 }
