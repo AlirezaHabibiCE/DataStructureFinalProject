@@ -8,6 +8,7 @@ package datastructurefinalproject;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -101,8 +102,8 @@ public class Home extends javax.swing.JFrame {
     File selectedFile = null;
     private void btnChoseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChoseFileActionPerformed
             JFileChooser file = new JFileChooser();
-            Scanner scanner;
-        
+            file.setDialogTitle("Open (*cmp,*.txt) Files");
+            
                     
             //----------------------------- Extension Filter -----------------------------------------------------------------------------------------------------------------
             
@@ -117,6 +118,7 @@ public class Home extends javax.swing.JFrame {
             //------------------------- Set Default Directory --------------------------------------------------------------------------------------------------------------------------------------------
             File defaultDirectory  = new File(System.getProperty("user.home")+System.getProperty("file.separator")+"Desktop");
             file.setCurrentDirectory(defaultDirectory);
+            
             
             file.showOpenDialog(this);
             selectedFile = file.getSelectedFile();
@@ -135,21 +137,20 @@ public class Home extends javax.swing.JFrame {
                int[] letterFrequency = tools.getLetterFrequency(charArray);
 
                Arrays.sort(charArray);
-               System.out.println(length);
-               for(char c : charArray)
-               {
-                   System.out.print(" "+ c);
-               }
-               
-               length = removeDuplicateCharacterFromArray(charArray, length);
-                              
-               for(char c : charArray)
-               {
-                   System.out.print(" "+ c);
-               }
-               System.out.println(length);
 
-//               JOptionPane.showMessageDialog(null, charArray2.length);
+               length = removeDuplicateCharacterFromArray(charArray, length);
+               
+               HuffmanNode root = tools.createTree(length, charArray, letterFrequency);
+               Map<Character,String> mp = tools.getHuffmanCodePerCharacter(root, "");
+               
+               String allBits = tools.getHuffmanCodeAllCharacter(text.toCharArray(), mp);
+               
+               file.setSelectedFile(new File("*.cmp"));
+               file.showSaveDialog(this);
+               
+                
+
+//               JOptionPane.showMessageDialog(null, root.data);
             
             }
             
