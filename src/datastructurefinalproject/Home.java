@@ -6,6 +6,9 @@
 package datastructurefinalproject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -63,9 +66,42 @@ public class Home extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+    
+    public static int removeDuplicateCharacterFromArray(char array[], int n)
+    {
+        if(n == 0 || n == 1)
+        {
+            return n;
+        }
+        char[] temp = new char[n];
+        int j = 0;
+        for(int i = 0; i < n-1;i++)
+        {
+            if(array[i] != array[i+1])
+            {
+                temp[j++] = array[i];
+            }
+        }
+        temp[j++] = array[n-1];
+        
+        for(int i = 0; i < j; i++)
+        {
+            array[i] = temp[i];
+        }
+        return j;
+    }
+    
+    
+    
+    
+    
+    
+    
     File selectedFile = null;
     private void btnChoseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChoseFileActionPerformed
-        JFileChooser file = new JFileChooser();
+            JFileChooser file = new JFileChooser();
+            Scanner scanner;
         
                     
             //----------------------------- Extension Filter -----------------------------------------------------------------------------------------------------------------
@@ -88,13 +124,35 @@ public class Home extends javax.swing.JFrame {
             String selectedFilePath = selectedFile.getPath();
             String extention = selectedFilePath.substring(selectedFilePath.lastIndexOf("."),selectedFilePath.length());
             
+            Tools tools = new Tools();
             
+            String text = "";
             if(extention.equals(".txt"))
             {
-                
+               text = tools.readWholeTextFromFile(selectedFile);
+               char[] charArray = tools.getCharacterArrayFromText(text);
+               int length = charArray.length;
+               int[] letterFrequency = tools.getLetterFrequency(charArray);
+
+               Arrays.sort(charArray);
+               System.out.println(length);
+               for(char c : charArray)
+               {
+                   System.out.print(" "+ c);
+               }
+               
+               length = removeDuplicateCharacterFromArray(charArray, length);
+                              
+               for(char c : charArray)
+               {
+                   System.out.print(" "+ c);
+               }
+               System.out.println(length);
+
+//               JOptionPane.showMessageDialog(null, charArray2.length);
+            
             }
             
-            JOptionPane.showMessageDialog(null, extention);
             
             
             
