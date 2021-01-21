@@ -6,6 +6,7 @@
 package datastructurefinalproject;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Map;
 import javax.swing.JFileChooser;
@@ -140,10 +141,15 @@ public class Home extends javax.swing.JFrame {
             int[] characterArrayLetterFrequencyFromCmpFile = tools.getTreeLetterFrequency(treeDataFromCmpFile);
             HuffmanNode root = tools.createTreeFromCmpFileData(characterArrayLetterFromCmpFile.length, characterArrayLetterFromCmpFile, characterArrayLetterFrequencyFromCmpFile);
             byte[] bb = tools.readHuffmanCodeFromCmpFile(selectedFilePath);
+            String myS = new String(bb,Charset.forName("UTF-8"));
+            String origanalString = tools.decode(myS, root);
             
-            for (int i = 0; i < bb.length; i++) {
-                
-            }
+            file.setSelectedFile(new File("*.txt"));
+            file.showSaveDialog(this);
+            File descFile = file.getSelectedFile();
+            String saveDescPath = descFile.getPath();
+            tools.writeTextFile(saveDescPath, origanalString);
+            
         }
         
 
