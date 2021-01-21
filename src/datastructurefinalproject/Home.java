@@ -6,10 +6,8 @@
 package datastructurefinalproject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -68,96 +66,87 @@ public class Home extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    
-    public static int removeDuplicateCharacterFromArray(char array[], int n)
-    {
-        if(n == 0 || n == 1)
-        {
+    public static int removeDuplicateCharacterFromArray(char array[], int n) {
+        if (n == 0 || n == 1) {
             return n;
         }
         char[] temp = new char[n];
         int j = 0;
-        for(int i = 0; i < n-1;i++)
-        {
-            if(array[i] != array[i+1])
-            {
+        for (int i = 0; i < n - 1; i++) {
+            if (array[i] != array[i + 1]) {
                 temp[j++] = array[i];
             }
         }
-        temp[j++] = array[n-1];
+        temp[j++] = array[n - 1];
         
-        for(int i = 0; i < j; i++)
-        {
+        for (int i = 0; i < j; i++) {
             array[i] = temp[i];
         }
         return j;
     }
     
-    
-    
-    
-    
-    
-    
     File selectedFile = null;
     private void btnChoseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChoseFileActionPerformed
-            JFileChooser file = new JFileChooser();
-            file.setDialogTitle("Open (*cmp,*.txt) Files");
-            
-                    
-            //----------------------------- Extension Filter -----------------------------------------------------------------------------------------------------------------
-            
-            FileNameExtensionFilter txt = new FileNameExtensionFilter("TEXT(*.txt)","txt");
-            FileNameExtensionFilter cmp = new FileNameExtensionFilter("cmp(*.cmp)", "cmp");
-                        
-            file.setFileFilter(txt);
-            file.setFileFilter(cmp);
-            
+        JFileChooser file = new JFileChooser();
+        file.setDialogTitle("Open (*cmp,*.txt) Files");
 
-            
-            //------------------------- Set Default Directory --------------------------------------------------------------------------------------------------------------------------------------------
-            File defaultDirectory  = new File(System.getProperty("user.home")+System.getProperty("file.separator")+"Desktop");
-            file.setCurrentDirectory(defaultDirectory);
-            
-            
-            file.showOpenDialog(this);
-            selectedFile = file.getSelectedFile();
-            
-            String selectedFilePath = selectedFile.getPath();
-            String extention = selectedFilePath.substring(selectedFilePath.lastIndexOf("."),selectedFilePath.length());
-            
-            Tools tools = new Tools();
-            
-            String text = "";
-            if(extention.equals(".txt"))
-            {
-               text = tools.readWholeTextFromFile(selectedFile);
-               char[] charArray = tools.getCharacterArrayFromText(text);
-               int length = charArray.length;
-               int[] letterFrequency = tools.getLetterFrequency(charArray);
+        //----------------------------- Extension Filter -----------------------------------------------------------------------------------------------------------------
+        FileNameExtensionFilter txt = new FileNameExtensionFilter("TEXT(*.txt)", "txt");
+        FileNameExtensionFilter cmp = new FileNameExtensionFilter("cmp(*.cmp)", "cmp");
+        
+        file.setFileFilter(txt);
+        file.setFileFilter(cmp);
 
-               Arrays.sort(charArray);
-
-               length = removeDuplicateCharacterFromArray(charArray, length);
-               
-               HuffmanNode root = tools.createTree(length, charArray, letterFrequency);
-               Map<Character,String> mp = tools.getHuffmanCodePerCharacter(root, "");
-               
-               String allBits = tools.getHuffmanCodeAllCharacter(text.toCharArray(), mp);
-               
-               file.setSelectedFile(new File("*.cmp"));
-               file.showSaveDialog(this);
-               
+        //------------------------- Set Default Directory --------------------------------------------------------------------------------------------------------------------------------------------
+        File defaultDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "Desktop");
+        file.setCurrentDirectory(defaultDirectory);
+        
+        file.showOpenDialog(this);
+        selectedFile = file.getSelectedFile();
+        
+        String selectedFilePath = selectedFile.getPath();
+        String extention = selectedFilePath.substring(selectedFilePath.lastIndexOf("."), selectedFilePath.length());
+        
+        Tools tools = new Tools();
+        
+        String text = "";
+        
+        if (extention.equals(".txt")) {
+            text = tools.readWholeTextFromFile(selectedFile);
+            char[] charArray = tools.getCharacterArrayFromText(text);
+            int length = charArray.length;
+            int[] letterFrequency = tools.getLetterFrequency(charArray);
+            
+            Arrays.sort(charArray);
+            
+            length = removeDuplicateCharacterFromArray(charArray, length);
+            
+            HuffmanNode root = tools.createTree(length, charArray, letterFrequency);
+            Map<Character, String> mp = tools.getHuffmanCodePerCharacter(root, "");
+            
+            String allBits = tools.getHuffmanCodeAllCharacter(text.toCharArray(), mp);
+            
+            byte[] bin = allBits.getBytes();
+            
+            file.setSelectedFile(new File("*.cmp"));
+            file.showSaveDialog(this);
+            File descFile = file.getSelectedFile();
+            String saveDescPath = descFile.getPath();
+            tools.writeCmpFile(saveDescPath, letterFrequency, bin);
+            
+        } else if (extention.equals(".cmp")) {
+            String treeDataFromCmpFile = tools.readTreeFromCmpFile(selectedFilePath);
+            char[] characterArrayLetterFromCmpFile = tools.getTreeLetter(treeDataFromCmpFile);
+            int[] characterArrayLetterFrequencyFromCmpFile = tools.getTreeLetterFrequency(treeDataFromCmpFile);
+            HuffmanNode root = tools.createTreeFromCmpFileData(characterArrayLetterFromCmpFile.length, characterArrayLetterFromCmpFile, characterArrayLetterFrequencyFromCmpFile);
+            byte[] bb = tools.readHuffmanCodeFromCmpFile(selectedFilePath);
+            
+            for (int i = 0; i < bb.length; i++) {
                 
-
-//               JOptionPane.showMessageDialog(null, root.data);
-            
             }
-            
-            
-            
-            
-            
+        }
+        
+
     }//GEN-LAST:event_btnChoseFileActionPerformed
 
     /**
