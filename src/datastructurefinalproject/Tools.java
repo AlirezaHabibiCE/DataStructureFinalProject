@@ -78,7 +78,11 @@ public class Tools
     }
  
     
-    
+//    public Object[][] getCharacterFromBinaryString(String strBin)
+//    {
+//        String[] temp = new String[256];
+//        for()
+//    }
     
     public char[] getCharacterArrayFromText(String text)
     {

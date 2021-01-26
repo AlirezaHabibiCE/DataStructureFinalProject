@@ -9,7 +9,10 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -37,6 +40,10 @@ public class Home extends javax.swing.JFrame {
     private void initComponents() {
 
         btnChoseFile = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jpbPro = new javax.swing.JProgressBar();
+        btnPrintTree = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -47,21 +54,63 @@ public class Home extends javax.swing.JFrame {
             }
         });
 
+        jPanel1.setBackground(new java.awt.Color(68, 94, 119));
+
+        jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(228, 234, 233));
+        jLabel1.setText("Ali reza / Khesraw Huffman Coding Project");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+
+        jpbPro.setValue(1);
+
+        btnPrintTree.setText("Print Tree");
+        btnPrintTree.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintTreeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(55, 55, 55)
-                .addComponent(btnChoseFile)
-                .addContainerGap(406, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jpbPro, javax.swing.GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(btnPrintTree, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnChoseFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(6, 6, 6))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(93, 93, 93)
-                .addComponent(btnChoseFile)
-                .addContainerGap(314, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnChoseFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jpbPro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnPrintTree)
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pack();
@@ -85,8 +134,9 @@ public class Home extends javax.swing.JFrame {
         }
         return j;
     }
-    
+    HuffmanNode root;
     File selectedFile = null;
+    JFrame mainFrame = this; 
     private void btnChoseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChoseFileActionPerformed
         JFileChooser file = new JFileChooser();
         file.setDialogTitle("Open (*cmp,*.txt) Files");
@@ -112,7 +162,8 @@ public class Home extends javax.swing.JFrame {
         
         String text = "";
         
-        if (extention.equals(".txt")) {
+        if (extention.equals(".txt")) 
+        {
             text = tools.readWholeTextFromFile(selectedFile);
             char[] charArray = tools.getCharacterArrayFromText(text);
             int length = charArray.length;
@@ -122,38 +173,88 @@ public class Home extends javax.swing.JFrame {
             
             length = removeDuplicateCharacterFromArray(charArray, length);
             
-            HuffmanNode root = tools.createTree(length, charArray, letterFrequency);
+            root = tools.createTree(length, charArray, letterFrequency);
             Map<Character, String> mp = tools.getHuffmanCodePerCharacter(root, "");
             
             String allBits = tools.getHuffmanCodeAllCharacter(text.toCharArray(), mp);
             
             byte[] bin = allBits.getBytes();
             
-            file.setSelectedFile(new File("*.cmp"));
-            file.showSaveDialog(this);
-            File descFile = file.getSelectedFile();
-            String saveDescPath = descFile.getPath();
-            tools.writeCmpFile(saveDescPath, letterFrequency, bin);
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run() 
+                {
+                    try 
+                    {
+                        for(int i = 1; i <= 100;i+=10)
+                        {
+                            Thread.sleep(100);
+                            jpbPro.setValue(jpbPro.getValue() + i);
+                        }
+                        file.setSelectedFile(new File("*.cmp"));
+                        file.showSaveDialog(mainFrame);
+                        File descFile = file.getSelectedFile();
+                        String saveDescPath = descFile.getPath();
+                        tools.writeCmpFile(saveDescPath, letterFrequency, bin);
+                        
+                    } catch (InterruptedException ex) 
+                    {
+                        System.out.println(ex.getMessage());
+                    }
+                }
+            }).start();
             
-        } else if (extention.equals(".cmp")) {
+            
+
+            
+        } else if (extention.equals(".cmp")) 
+        {
             String treeDataFromCmpFile = tools.readTreeFromCmpFile(selectedFilePath);
             char[] characterArrayLetterFromCmpFile = tools.getTreeLetter(treeDataFromCmpFile);
             int[] characterArrayLetterFrequencyFromCmpFile = tools.getTreeLetterFrequency(treeDataFromCmpFile);
-            HuffmanNode root = tools.createTreeFromCmpFileData(characterArrayLetterFromCmpFile.length, characterArrayLetterFromCmpFile, characterArrayLetterFrequencyFromCmpFile);
+            root = tools.createTreeFromCmpFileData(characterArrayLetterFromCmpFile.length, characterArrayLetterFromCmpFile, characterArrayLetterFrequencyFromCmpFile);
+            
             byte[] bb = tools.readHuffmanCodeFromCmpFile(selectedFilePath);
             String myS = new String(bb,Charset.forName("UTF-8"));
             String origanalString = tools.decode(myS, root);
             
-            file.setSelectedFile(new File("*.txt"));
-            file.showSaveDialog(this);
-            File descFile = file.getSelectedFile();
-            String saveDescPath = descFile.getPath();
-            tools.writeTextFile(saveDescPath, origanalString);
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run() 
+                {
+                    try 
+                    {
+                        for(int i = 1; i <= 100;i+=10)
+                        {
+                            Thread.sleep(100);
+                            jpbPro.setValue(jpbPro.getValue() + i);
+                        }
+                        file.setSelectedFile(new File("*.txt"));
+                        file.showSaveDialog(mainFrame);
+                        File descFile = file.getSelectedFile();
+                        String saveDescPath = descFile.getPath();
+                        tools.writeTextFile(saveDescPath, origanalString);
+                    } catch (InterruptedException ex) 
+                    {
+                        System.out.println(ex.getMessage());
+                    }
+                }
+            }).start();
+            
+            
+            
             
         }
         
 
     }//GEN-LAST:event_btnChoseFileActionPerformed
+
+    private void btnPrintTreeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintTreeActionPerformed
+        TreePrinter t = new TreePrinter();
+       t.print(root);
+    }//GEN-LAST:event_btnPrintTreeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -192,5 +293,9 @@ public class Home extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnChoseFile;
+    private javax.swing.JButton btnPrintTree;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JProgressBar jpbPro;
     // End of variables declaration//GEN-END:variables
 }
