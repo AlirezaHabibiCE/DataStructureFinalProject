@@ -6,26 +6,24 @@
 package datastructurefinalproject;
 
 import java.io.File;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
  * @author mohammadi
  */
-public class Home extends javax.swing.JFrame {
+public class Home extends javax.swing.JFrame 
+{
 
     /**
      * Creates new form Home
      */
-    public Home() {
+    public Home() 
+    {
         initComponents();
         new Tools().setCenter(this);
     }
@@ -58,14 +56,14 @@ public class Home extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(228, 234, 233));
-        jLabel1.setText("Ali reza / Khesraw Huffman Coding Project");
+        jLabel1.setText("Ali reza / Khesraw Huffman Coding");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addGap(97, 97, 97)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -163,29 +161,27 @@ public class Home extends javax.swing.JFrame {
         String selectedFilePath = selectedFile.getPath();
         String extention = selectedFilePath.substring(selectedFilePath.lastIndexOf("."), selectedFilePath.length());
         
-        Tools tools = new Tools();
-        
+        EncodeTools encodeTools = new EncodeTools();
+        DecodeTools decodeTools = new DecodeTools();
         String text = "";
         
         if (extention.equals(".txt")) 
         {
-            text = tools.readWholeTextFromFile(selectedFile);
-            char[] charArray = tools.getCharacterArrayFromText(text);
+            text = encodeTools.readWholeTextFromFile(selectedFile);
+            char[] charArray = encodeTools.getCharacterArrayFromText(text);
             int length = charArray.length;
-            int[] letterFrequency = tools.getLetterFrequency(charArray);
+            int[] letterFrequency = encodeTools.getLetterFrequency(charArray);
             
             Arrays.sort(charArray);
             
             length = removeDuplicateCharacterFromArray(charArray, length);
             
-            root = tools.createTree(length, charArray, letterFrequency);
-            Map<Character, String> mp = tools.getHuffmanCodePerCharacter(root, "");
+            root = encodeTools.createTree(length, charArray, letterFrequency);
+            Map<Character, String> mp = encodeTools.getHuffmanCodePerCharacter(root, "");
             
-            String allBits = tools.getHuffmanCodeAllCharacter(text.toCharArray(), mp);
-            System.err.println(allBits.length());
-            System.out.println(allBits);
+            String allBits = encodeTools.getHuffmanCodeAllCharacter(text.toCharArray(), mp);
             
-            Object[] splitedBits = tools.getCharacterFromBinaryString(allBits);
+            Object[] splitedBits = encodeTools.getCharacterFromBinaryString(allBits);
             char[] arrayCharacter = (char[])splitedBits[0];
             String remainingBits = (String)splitedBits[1];
 
@@ -205,8 +201,8 @@ public class Home extends javax.swing.JFrame {
                         file.showSaveDialog(mainFrame);
                         File descFile = file.getSelectedFile();
                         String saveDescPath = descFile.getPath();
-                        tools.writeCmpFile(saveDescPath, letterFrequency, arrayCharacter,remainingBits);
-                        
+                        encodeTools.writeCmpFile(saveDescPath, letterFrequency, arrayCharacter,remainingBits);
+                        jpbPro.setValue(1);
                     } catch (InterruptedException ex) 
                     {
                         System.out.println(ex.getMessage());
@@ -214,22 +210,20 @@ public class Home extends javax.swing.JFrame {
                 }
             }).start();
             
-            
-
-            
+   
         }else if (extention.equals(".cmp")) 
         {
-            String treeDataFromCmpFile = tools.readTreeFromCmpFile(selectedFilePath);
+            String treeDataFromCmpFile = decodeTools.readTreeFromCmpFile(selectedFilePath);
             
-            Object[] characterArrayLetterFrequencyAndLetterFromCmpFile = tools.getTreeLetterFrequency(treeDataFromCmpFile);
+            Object[] characterArrayLetterFrequencyAndLetterFromCmpFile = decodeTools.getTreeLetterFrequency(treeDataFromCmpFile);
             char[] characterArrayLetterFromCmpFile = (char[])characterArrayLetterFrequencyAndLetterFromCmpFile[0];
             int[] characterArrayLetterFrequencyFromCmpFile = (int[])characterArrayLetterFrequencyAndLetterFromCmpFile[1];
             int length = (int)characterArrayLetterFrequencyAndLetterFromCmpFile[2];
 
-            root = tools.createTreeFromCmpFileData(length, characterArrayLetterFromCmpFile, characterArrayLetterFrequencyFromCmpFile);
-            String huffmanCode = tools.readHuffmanCodeFromCmpFile(selectedFilePath);
+            root = decodeTools.createTreeFromCmpFileData(length, characterArrayLetterFromCmpFile, characterArrayLetterFrequencyFromCmpFile);
+            String huffmanCode = decodeTools.readHuffmanCodeFromCmpFile(selectedFilePath);
 
-            String origanalString = tools.decode(huffmanCode, root);
+            String origanalString = decodeTools.decode(huffmanCode, root);
 
             
             new Thread(new Runnable()
@@ -248,16 +242,14 @@ public class Home extends javax.swing.JFrame {
                         file.showSaveDialog(mainFrame);
                         File descFile = file.getSelectedFile();
                         String saveDescPath = descFile.getPath();
-                        tools.writeTextFile(saveDescPath, origanalString);
+                        decodeTools.writeTextFile(saveDescPath, origanalString);
+                        jpbPro.setValue(1);
                     } catch (InterruptedException ex) 
                     {
                         System.out.println(ex.getMessage());
                     }
                 }
             }).start();
-            
-            
-            
             
         }
         
