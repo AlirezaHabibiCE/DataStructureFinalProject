@@ -116,20 +116,25 @@ public class Home extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    public static int removeDuplicateCharacterFromArray(char array[], int n) {
-        if (n == 0 || n == 1) {
+    public static int removeDuplicateCharacterFromArray(char array[], int n) 
+    {
+        if (n == 0 || n == 1) 
+        {
             return n;
         }
         char[] temp = new char[n];
         int j = 0;
-        for (int i = 0; i < n - 1; i++) {
-            if (array[i] != array[i + 1]) {
+        for (int i = 0; i < n - 1; i++) 
+        {
+            if (array[i] != array[i + 1]) 
+            {
                 temp[j++] = array[i];
             }
         }
         temp[j++] = array[n - 1];
         
-        for (int i = 0; i < j; i++) {
+        for (int i = 0; i < j; i++)
+        {
             array[i] = temp[i];
         }
         return j;
@@ -177,9 +182,13 @@ public class Home extends javax.swing.JFrame {
             Map<Character, String> mp = tools.getHuffmanCodePerCharacter(root, "");
             
             String allBits = tools.getHuffmanCodeAllCharacter(text.toCharArray(), mp);
+            System.err.println(allBits.length());
+            System.out.println(allBits);
             
-            byte[] bin = allBits.getBytes();
-            
+            Object[] splitedBits = tools.getCharacterFromBinaryString(allBits);
+            char[] arrayCharacter = (char[])splitedBits[0];
+            String remainingBits = (String)splitedBits[1];
+
             new Thread(new Runnable()
             {
                 @Override
@@ -196,7 +205,7 @@ public class Home extends javax.swing.JFrame {
                         file.showSaveDialog(mainFrame);
                         File descFile = file.getSelectedFile();
                         String saveDescPath = descFile.getPath();
-                        tools.writeCmpFile(saveDescPath, letterFrequency, bin);
+                        tools.writeCmpFile(saveDescPath, letterFrequency, arrayCharacter,remainingBits);
                         
                     } catch (InterruptedException ex) 
                     {
@@ -208,16 +217,20 @@ public class Home extends javax.swing.JFrame {
             
 
             
-        } else if (extention.equals(".cmp")) 
+        }else if (extention.equals(".cmp")) 
         {
             String treeDataFromCmpFile = tools.readTreeFromCmpFile(selectedFilePath);
-            char[] characterArrayLetterFromCmpFile = tools.getTreeLetter(treeDataFromCmpFile);
-            int[] characterArrayLetterFrequencyFromCmpFile = tools.getTreeLetterFrequency(treeDataFromCmpFile);
-            root = tools.createTreeFromCmpFileData(characterArrayLetterFromCmpFile.length, characterArrayLetterFromCmpFile, characterArrayLetterFrequencyFromCmpFile);
             
-            byte[] bb = tools.readHuffmanCodeFromCmpFile(selectedFilePath);
-            String myS = new String(bb,Charset.forName("UTF-8"));
-            String origanalString = tools.decode(myS, root);
+            Object[] characterArrayLetterFrequencyAndLetterFromCmpFile = tools.getTreeLetterFrequency(treeDataFromCmpFile);
+            char[] characterArrayLetterFromCmpFile = (char[])characterArrayLetterFrequencyAndLetterFromCmpFile[0];
+            int[] characterArrayLetterFrequencyFromCmpFile = (int[])characterArrayLetterFrequencyAndLetterFromCmpFile[1];
+            int length = (int)characterArrayLetterFrequencyAndLetterFromCmpFile[2];
+
+            root = tools.createTreeFromCmpFileData(length, characterArrayLetterFromCmpFile, characterArrayLetterFrequencyFromCmpFile);
+            String huffmanCode = tools.readHuffmanCodeFromCmpFile(selectedFilePath);
+
+            String origanalString = tools.decode(huffmanCode, root);
+
             
             new Thread(new Runnable()
             {
@@ -253,7 +266,7 @@ public class Home extends javax.swing.JFrame {
 
     private void btnPrintTreeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintTreeActionPerformed
         TreePrinter t = new TreePrinter();
-       t.print(root);
+        t.print(root);
     }//GEN-LAST:event_btnPrintTreeActionPerformed
 
     /**

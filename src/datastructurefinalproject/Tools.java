@@ -78,11 +78,46 @@ public class Tools
     }
  
     
-//    public Object[][] getCharacterFromBinaryString(String strBin)
-//    {
-//        String[] temp = new String[256];
-//        for()
-//    }
+    public Object[] getCharacterFromBinaryString(String strBin)
+    {
+
+        String[] splited8CharacterStringArray = new String[10000000];
+        String remainString = "";
+        int till = 0;
+        
+        for(int i = 1; i < strBin.length(); i++)
+        {
+            if(i % 8 == 0)
+            {
+                splited8CharacterStringArray[i / 8 - 1] = strBin.substring(till, i);
+                till = i;
+            }
+        }
+        
+
+        
+        remainString = strBin.substring(till, strBin.length());
+        Object[] t = new Object[3];
+        char[] characterArray = new char[splited8CharacterStringArray.length];
+        int whileCounter = 0;
+        while(splited8CharacterStringArray[whileCounter] != null)
+        {
+            int tempInteger = 0;
+            String tempString = splited8CharacterStringArray[whileCounter];
+            for(int i = 7; i >= 0; i--)
+            {
+                tempInteger += Integer.parseInt(tempString.charAt(i) + "") * Math.pow(2, 7 - i);
+            }
+            char tempCharacter = (char)tempInteger;
+            
+            characterArray[whileCounter] = tempCharacter;
+            whileCounter++;
+        }
+        t[0] = characterArray;
+        t[1] = remainString;
+        
+        return t;
+    }
     
     public char[] getCharacterArrayFromText(String text)
     {
@@ -103,36 +138,115 @@ public class Tools
     
     public char[] getTreeLetter(String data)
     {
-        char[] tempC = data.toCharArray();
-        String tempS = "";
-        
-        for(int i = 0; i < tempC.length; i += 4)
+        char[] characterArray = data.toCharArray();
+        int countOfSpace = 0;
+        int indexOfChar = 0;
+        char[] charArray = new char[characterArray.length];
+        for(int i = 0; i < characterArray.length; i++)
         {
-            tempS += tempC[i];
+            if(i+2 < characterArray.length)
+            {
+                if(characterArray[i] == ' ' && characterArray[i+1] == ' ' && characterArray[i+2] == ' ')
+                {
+                    charArray[indexOfChar++] = characterArray[i+1];
+                    i += 4;
+                    continue;
+                }
+            }
+            if(characterArray[i] == ' ')
+            {
+                
+                countOfSpace++;
+            }
+            
+            if(countOfSpace % 2 == 0)
+            {
+                
+                charArray[indexOfChar] = characterArray[i];
+                indexOfChar++;
+            }
+            
+            
+            
         }
-        
-        return tempS.toCharArray();
+        return charArray;
     }
     
-    public int[] getTreeLetterFrequency(String data)
+    public Object[] getTreeLetterFrequency(String data)
     {
-        char[] tempC = data.toCharArray();
-        String tempS = "";
+        char[] arrayData = data.toCharArray();
+        int till=0;
+        int head=1;
+        int fla = 0;
+        char[] letterTemp = new char[256];
+        int[] letterFreq = new int[256];
+        int counterLetter = 0;
+        int counterFrq = 0;
         
-        for(int i = 2; i < tempC.length; i += 4)
+        while(head < arrayData.length)
         {
-            tempS += tempC[i];
+              if(till == 0)
+              {
+                letterTemp[counterLetter] = arrayData[0];
+                counterLetter++;
+                till++;
+                head++;
+                fla = 1;
+              }
+              
+              if(arrayData[head] != ' ' && head+1 == arrayData.length)
+              {
+                  String temp = "";
+                  for(int j = till +1; j < head+1;j++)
+                  {
+                      temp += arrayData[j];
+                  }
+                  letterFreq[counterFrq++] = Integer.parseInt(temp);
+                  till = head;
+                  head++;
+                  fla = 0;
+              }else if(arrayData[head]==' ' && till+1 == head)
+              {
+                  letterTemp[counterLetter++] = arrayData[till];
+                  till = head + 1;
+                  head += 2;
+                  fla = 1;
+              }else if(arrayData[head] == ' ')
+              {
+                  if(fla == 0)
+                  {
+                      letterTemp[counterLetter++] = arrayData[till+1];
+                      till = head;
+                      head++;
+                      fla = 1;
+                  }else
+                  {
+                      String temp = "";
+                      for(int j = till + 1; j < head; j++)
+                      {
+                          temp += arrayData[j];
+                      }
+                      letterFreq[counterFrq++] = Integer.parseInt(temp);
+                      till = head;
+                      head++;
+                      fla = 0;
+                  }
+              }else
+              {
+                  head++;
+              }
         }
-        
-        int[] tempI = new int[256];
-        char[] tempCharArray = tempS.toCharArray();
-        
-        for(int i = 0; i < tempCharArray.length; i++)
+        int counter = 0;
+        for(int c : letterFreq)
         {
-            tempI[i] = Integer.parseInt(tempCharArray[i]+"");
+            if(c != 0)
+                counter++;
         }
-        
-        return tempI;
+        Object[] tempOb = new Object[3];
+        tempOb[0] = letterTemp;
+        tempOb[1] = letterFreq;
+        tempOb[2] = counter;
+        return tempOb;
     }
     
     public HuffmanNode createTree(int length, char[] charArray, int[] charArrayFrequency)
@@ -183,17 +297,24 @@ public class Tools
     char[] arr = S.toCharArray();
     int index = 0;
     String rst = "";
-    while (index < arr.length) {
+    while (index < arr.length) 
+    {
         HuffmanNode node = root;
-        while (node != null) {
-            if (node.left == null && node.right == null) {
+        while (node != null) 
+        {
+            if (node.left == null && node.right == null)
+            {
                 rst += node.character;
+
                 break;//break inner while
-            } else {
+            } else 
+            {
                 char c = arr[index];
-                if (c == '0') {
+                if (c == '0')
+                {
                     node = node.left;
-                } else {
+                } else 
+                {
                     node = node.right;
                 }
                 index++;
@@ -249,8 +370,9 @@ public class Tools
         if(tree != null)
         {
             inOrder(tree.left);
-            System.out.print(" | " + tree.data);
+            
             inOrder(tree.right);
+            System.out.print(" | " + tree.data);
         }
     }
     
@@ -301,17 +423,32 @@ public class Tools
         return temp;
     }
     
-    public byte[] readHuffmanCodeFromCmpFile(String path)
+    public String readHuffmanCodeFromCmpFile(String path)
     {
-        byte[] tempB = null;
+        Object[] tempo = new Object[2];
+        char[] tempB = null;
+        String tempS = "";
+        String huffmancode = "";
         try 
         {
             FileInputStream f = new FileInputStream(new File(path));
             ObjectInputStream oi = new ObjectInputStream(f);
             oi.readUTF();
             oi.readChar();
-            tempB = oi.readAllBytes();
+            String assumedCharacter = oi.readUTF();
+            oi.readChar();
+            String remainHuffmanCode = oi.readUTF();
             oi.close();
+            String tempBinaryPart1 = "";
+            
+            for(char c : assumedCharacter.toCharArray())
+            {
+                String result = String.format("%8s", Integer.toBinaryString(c)).replace(' ', '0');
+                tempBinaryPart1 += result;
+            }
+            
+            huffmancode = tempBinaryPart1 + remainHuffmanCode;
+            
             
         }catch (FileNotFoundException ex) 
         {
@@ -320,7 +457,8 @@ public class Tools
         {
             
         }
-        return tempB;
+        
+        return huffmancode;
     }
     
     public void writeTextFile(String path,String text)
@@ -337,7 +475,7 @@ public class Tools
     }
     
     
-    public void writeCmpFile(String path,int[] arrayCharFrequency,byte[] binaryData)
+    public void writeCmpFile(String path,int[] arrayCharFrequency,char[] characterArray,String remainHuffmanCode)
     {
         try
         {
@@ -352,13 +490,18 @@ public class Tools
                   tempCh += (char)i + " " + arrayCharFrequency[i] + " ";
               }
            }
+           String charString = "";
+           for(char c : characterArray)
+           {
+               if(c != '\0')
+                charString += c;
+           }
            os.writeUTF(tempCh);
            os.writeChar('\n');
-           os.write(binaryData);
-
+           os.writeUTF(charString);
+           os.writeChar('\n');
+           os.writeUTF(remainHuffmanCode);
            os.close();
-
-           
             
         }catch(FileNotFoundException fileNotFoundException)
         {
