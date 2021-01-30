@@ -8,9 +8,10 @@
 <h1 style="text-align:center;">Porpuse of these</h1>
 <pre>       this reducing your file size with huffman code and then you can decode your file(decompress) to have your original file</pre> 
 <h1>How it works</h1>
-<img src="https://filebin.net/89hf20w1tgjfk4fc/compress.JPG?t=ppseaehz" width="600px">
+
+![image](https://github.com/khesraw-mohammadi/DataStructureFinalProject/blob/origin/firstImage.jpg.JPG)
 <br>
-<img src="https://filebin.net/89hf20w1tgjfk4fc/decode.JPG?t=ppseaehz" width="600px">
+![image](https://github.com/khesraw-mohammadi/DataStructureFinalProject/blob/origin/firstImage.jpg.JPG)
 
 <h1>More information</h1>
 <a href="https://en.wikipedia.org/wiki/Huffman_coding#:~:text=In%20computer%20science%20and%20information,used%20for%20lossless%20data%20compression.&text=The%20output%20from%20Huffman's%20algorithm,a%20character%20in%20a%20file).">
