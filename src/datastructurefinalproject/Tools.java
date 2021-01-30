@@ -2,6 +2,7 @@ package datastructurefinalproject;
 
 import java.awt.Toolkit;
 import java.util.Comparator;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -43,14 +44,21 @@ public class Tools
             jframe.setLocation(x, y);
     }
     
+    public void setIcon(JFrame jframe)
+    {
+        ImageIcon image = new ImageIcon(getClass().getResource("/images/icon.jpg"));
+        jframe.setIconImage(image.getImage());
+        jframe.setTitle("Text File Compress With Huffman Algorithm");
+    }
+
+    
     public void inOrder(HuffmanNode tree)
     {
         if(tree != null)
         {
             inOrder(tree.left);
-            
+            System.out.print(" " + tree.data);
             inOrder(tree.right);
-            System.out.print(" | " + tree.data);
         }
     }
   
@@ -61,15 +69,18 @@ public class Tools
     {
         JOptionPane.showMessageDialog(jFrame, message,"Successful Message",JOptionPane.INFORMATION_MESSAGE);
     }
+    
     public void wrongMessage(JFrame jFrame,String message,String title)
     {
         JOptionPane.showMessageDialog(jFrame, message,title,JOptionPane.WARNING_MESSAGE);
     }
+    
     public void errorMessage(JFrame jFrame,String message,String title)
     {
         JOptionPane.showMessageDialog(jFrame, message,title,JOptionPane.ERROR_MESSAGE);
     }
-     public void errorMessage(JFrame jFrame,Exception e ,String message,String title)
+    
+    public void errorMessage(JFrame jFrame,Exception e ,String message,String title)
     {
         JOptionPane.showMessageDialog(jFrame, message+" Error : "+e.getMessage(),title,JOptionPane.ERROR_MESSAGE);
     }

@@ -53,6 +53,7 @@ public class EncodeTools
         return tempArray;
     }
     
+    // creatting huffman tree from data getted from text file
     public HuffmanNode createTree(int length, char[] charArray, int[] charArrayFrequency)
     {
         PriorityQueue<HuffmanNode> priorityQueue = new PriorityQueue<>(length,new MyComparator());
@@ -93,7 +94,7 @@ public class EncodeTools
         return root;
     }
     
-    Map<Character,String> mp = new HashMap<Character,String>();  
+    Map<Character,String> mp = new HashMap<Character,String>(); // map structure for keeping character and huffman code
     public Map<Character,String> getHuffmanCodePerCharacter(HuffmanNode root, String s)
     {
         if(root.left == null && root.right == null && root.character !='~')
@@ -147,7 +148,7 @@ public class EncodeTools
             String tempString = splited8CharacterStringArray[whileCounter];
             for(int i = 7; i >= 0; i--)
             {
-                tempInteger += Integer.parseInt(tempString.charAt(i) + "") * Math.pow(2, 7 - i);
+                tempInteger += Integer.parseInt(tempString.charAt(i) + "") * Math.pow(2, 7 - i); // converting binary number to decimal number
             }
             char tempCharacter = (char)tempInteger;
             
@@ -190,10 +191,10 @@ public class EncodeTools
             
         }catch(FileNotFoundException fileNotFoundException)
         {
-            
+            tools.errorMessage(null, fileNotFoundException.getMessage() , "File Not Found Error!");
         }catch(IOException iOException)
         {
-            
+            tools.errorMessage(null, iOException.getMessage() , "File Input Output Error!");
         }
 
         

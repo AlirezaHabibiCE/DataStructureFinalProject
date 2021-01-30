@@ -26,6 +26,7 @@ public class Home extends javax.swing.JFrame
     {
         initComponents();
         new Tools().setCenter(this);
+        new Tools().setIcon(this);
     }
 
     /**
@@ -147,9 +148,8 @@ public class Home extends javax.swing.JFrame
         //----------------------------- Extension Filter -----------------------------------------------------------------------------------------------------------------
         FileNameExtensionFilter txt = new FileNameExtensionFilter("TEXT(*.txt)", "txt");
         FileNameExtensionFilter cmp = new FileNameExtensionFilter("cmp(*.cmp)", "cmp");
+
         
-        file.setFileFilter(txt);
-        file.setFileFilter(cmp);
 
         //------------------------- Set Default Directory --------------------------------------------------------------------------------------------------------------------------------------------
         File defaultDirectory = new File(System.getProperty("user.home") + System.getProperty("file.separator") + "Desktop");
@@ -197,6 +197,7 @@ public class Home extends javax.swing.JFrame
                             Thread.sleep(100);
                             jpbPro.setValue(jpbPro.getValue() + i);
                         }
+                        file.setFileFilter(cmp);
                         file.setSelectedFile(new File("*.cmp"));
                         file.showSaveDialog(mainFrame);
                         File descFile = file.getSelectedFile();
@@ -215,7 +216,7 @@ public class Home extends javax.swing.JFrame
         {
             String treeDataFromCmpFile = decodeTools.readTreeFromCmpFile(selectedFilePath);
             
-            Object[] characterArrayLetterFrequencyAndLetterFromCmpFile = decodeTools.getTreeLetterFrequency(treeDataFromCmpFile);
+            Object[] characterArrayLetterFrequencyAndLetterFromCmpFile = decodeTools.getTreeLetterAndFrequency(treeDataFromCmpFile);
             char[] characterArrayLetterFromCmpFile = (char[])characterArrayLetterFrequencyAndLetterFromCmpFile[0];
             int[] characterArrayLetterFrequencyFromCmpFile = (int[])characterArrayLetterFrequencyAndLetterFromCmpFile[1];
             int length = (int)characterArrayLetterFrequencyAndLetterFromCmpFile[2];
@@ -239,6 +240,7 @@ public class Home extends javax.swing.JFrame
                             jpbPro.setValue(jpbPro.getValue() + i);
                         }
                         file.setSelectedFile(new File("*.txt"));
+                        file.setFileFilter(txt);
                         file.showSaveDialog(mainFrame);
                         File descFile = file.getSelectedFile();
                         String saveDescPath = descFile.getPath();
