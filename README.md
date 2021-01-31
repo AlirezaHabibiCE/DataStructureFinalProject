@@ -8,7 +8,7 @@
 <h1 style="text-align:center;">Porpuse of these</h1>
 <pre>       this reducing your file size with huffman code and then you can decode your file(decompress) to have your original file</pre> 
 <h1>How it works</h1>
-![image](https://github.com/khesraw-mohammadi/DataStructureFinalProject/blob/origin/firstImage.jpg.JPG)
+![image](https://github.com/khesraw-mohammadi/DataStructureFinalProject/blob/origin/encode.jpg)
 
 <br>
 <hr>
