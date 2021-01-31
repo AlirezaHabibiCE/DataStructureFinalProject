@@ -11,7 +11,7 @@
 ![image](https://github.com/khesraw-mohammadi/DataStructureFinalProject/blob/origin/firstImage.jpg.JPG)
 
 <br>
-
+<hr>
 ![image](https://github.com/khesraw-mohammadi/DataStructureFinalProject/blob/origin/decode.JPG)
 
 <h1>More information</h1>
